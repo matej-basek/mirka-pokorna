@@ -54,7 +54,7 @@ app.use('/api/services', servicesRoutes);
 app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
 
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/mirkapokorna';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://vesmiru_db_user:VDoxtkkDTFvrf3Cc@cluster0.jdhvto6.mongodb.net/mirkapokorna?retryWrites=true&w=majority&appName=Cluster0';
 
 // Spustíme Express HTTP server ihned, aby API reagovalo okamžitě a nečekalo na DB
 app.listen(PORT, () => {

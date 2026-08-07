@@ -41,7 +41,7 @@ router.post('/login', async (req, res) => {
 
         const token = jwt.sign(
             { userId: user._id, username: user.username },
-            process.env.JWT_SECRET,
+            process.env.JWT_SECRET || 'supersecret123',
             { expiresIn: '7d' }
         );
 
@@ -53,8 +53,9 @@ router.post('/login', async (req, res) => {
         });
 
         res.json({ message: 'Přihlášení úspěšné', username: user.username, token });
-    } catch (err) {
-        res.status(500).json({ message: 'Chyba serveru při přihlašování.' });
+    } catch (err: any) {
+        console.error('Chyba při přihlašování:', err);
+        res.status(500).json({ message: err?.message || 'Chyba serveru při přihlašování.' });
     }
 });
 
