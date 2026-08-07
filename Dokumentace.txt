@@ -1,0 +1,42 @@
+Dokumentace k webové aplikaci Mirka Pokorná (mirkapokorna.cz)
+==========================================================
+
+1. Spuštění projektu
+--------------------
+Projekt se skládá ze dvou částí: Backend (Node.js/Express) a Frontend (Next.js 16).
+
+Aby web správně fungoval lokálně, spustíte oba:
+a) Backend:
+   - Otevřete terminál ve složce `backend`
+   - Spusťte příkaz: `npm run dev`
+   - Pokud spouštíte poprvé, můžete databázi naplnit ukázkovými daty příkazem: `npm run seed`
+
+b) Frontend:
+   - Otevřete druhý terminál ve složce `frontend`
+   - Spusťte příkaz: `npm run dev`
+   - Web se načte na adrese: http://localhost:3000
+
+2. Design & Funkcionalita webu
+------------------------------
+- **Hero sekce:** Něžný mořsko-pudrový přechod s motivem květu jabloně, H1 emotivním sdělením a vlnkovými animacemi na zlatém CTA tlačítku.
+- **O mně:** Osobní příběh Mirky Pokorné v organickém kruhovém rámečku s filosofií bezpečí a přijetí bez tlaku na výkon.
+- **Služby & Témata:** 3 hravé karty s mikro-interakcemi:
+  1. Intuitivní zpěv & Muzikoterapie
+  2. Spontánní tanec & Vědomý pohyb
+  3. Ženské kruhy & Workshopy
+- **Jak to probíhá:** 3kroková přehledná časová osa (Bezpečné naladění ➔ Prožitek a uvolnění ➔ Integrace a klid).
+- **Nadcházející akce:** Mřížka akciček a workshopů s datem, cenou, lokací a přihlašovacím tlačítkem.
+- **Rozvrh kurzů (Studia):** Přehled lokací (např. Prostor Pro Tebe – Praha, Studio Harmonik – Brno), lekce, dny, časy a ceny.
+- **Kruhy podpory (Reference):** Pocity a hodnocení účastnic na jemném pudrově růžovém podkladu.
+- **Kontaktní formulář:** Rezervační a kontaktní formulář propojitelný s e-mailem a přímé odkazy na sociální sítě (Instagram/Facebook).
+
+3. Administrace (CMS)
+---------------------
+Pro úpravu textů, přidávání akcí a správy studií navštivte:
+=> http://localhost:3000/admin/login
+
+- **Přihlašovací údaje:**
+  * Uživatelské jméno: `MirkaPokorna`
+  * Heslo: `MirkaPokorna2026!`
+
+Vytvořil: Matěj Bašek pro Mirku Pokornou
