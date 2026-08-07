@@ -55,7 +55,8 @@ router.post('/login', async (req, res) => {
         res.json({ message: 'Přihlášení úspěšné', username: user.username, token });
     } catch (err) {
         console.error('Chyba při přihlašování:', err);
-        res.status(500).json({ message: (err && err.message) ? err.message : 'Chyba serveru při přihlašování.' });
+        const errMsg = err && (err.stack || err.message || String(err));
+        res.status(500).json({ message: 'Chyba serveru při přihlašování: ' + errMsg });
     }
 });
 
