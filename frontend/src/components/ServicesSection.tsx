@@ -237,7 +237,7 @@ export default function ServicesSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-white/70 backdrop-blur-md"
+            className="modal-overlay"
             onClick={() => setSelectedService(null)}
           >
             <motion.div
@@ -245,12 +245,10 @@ export default function ServicesSection() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-lg glass"
+              className="glass modal-content"
               style={{
                 background: 'rgba(255, 255, 255, 0.98)',
                 border: '1px solid rgba(228, 180, 195, 0.3)',
-                borderRadius: '24px',
-                padding: '40px 32px',
                 boxShadow: '0 25px 50px -12px rgba(228, 180, 195, 0.25)',
               }}
             >

@@ -270,6 +270,59 @@ h1, h2, h3, h4, .font-heading, .section-title {
   padding: 20px;
 }
 
+/* Modal content box */
+.modal-content {
+  border-radius: 28px;
+  max-width: min(90vw, 680px);
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden auto;
+  padding: 36px;
+  position: relative;
+}
+
+/* Mobile: bottom sheet styl pro modaly */
+@media (max-width: 640px) {
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+    padding-top: 60px;
+  }
+
+  .modal-content {
+    border-radius: 28px 28px 0 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: 88vh !important;
+    padding: 24px 20px 32px !important;
+  }
+
+  /* Close button větší tap target na mobilu (kulatné tlačítko s inline stylem) */
+  .modal-overlay button[style*="border-radius: 50%"] {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 22px !important;
+  }
+
+  /* Close button větší tap target na mobilu (Tailwind absolute) */
+  .modal-content > button:first-child,
+  .modal-overlay .modal-content button[aria-label="Zavřít"] {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+  }
+
+  /* Titulek modalu menší na mobilu */
+  .modal-overlay h3 {
+    font-size: 1.35rem !important;
+  }
+}
+
 /* Responsive Flower Overlay */
 .photo-flower-overlay {
   position: absolute;

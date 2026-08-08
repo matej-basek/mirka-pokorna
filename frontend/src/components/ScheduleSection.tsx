@@ -239,16 +239,7 @@ export default function ScheduleSection() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.85, y: 40 }}
               transition={{ type: 'spring', damping: 20, stiffness: 200 }}
-              className="glass"
-              style={{
-                borderRadius: '28px',
-                maxWidth: '680px',
-                width: '100%',
-                maxHeight: '90vh',
-                overflow: 'hidden auto',
-                padding: '36px',
-                position: 'relative',
-              }}
+              className="glass modal-content"
             >
               <button
                 onClick={() => setSelected(null)}
