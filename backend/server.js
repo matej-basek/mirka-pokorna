@@ -59,6 +59,21 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/mirkapokor
 // Spustíme Express HTTP server ihned, aby API reagovalo okamžitě a nečekalo na DB
 app.listen(PORT, () => {
     console.log(`🚀 Backend server mirkapokorna.cz běží na portu ${PORT}`);
+
+    // Self-ping pro udržení aktivity na Render.com (Render nastavuje RENDER_EXTERNAL_URL automaticky)
+    const renderUrl = process.env.RENDER_EXTERNAL_URL || process.env.SELF_PING_URL;
+    if (renderUrl) {
+        const pingUrl = `${renderUrl.replace(/\/$/, '')}/api/health`;
+        const client = pingUrl.startsWith('https') ? require('https') : require('http');
+        console.log(`📡 Self-ping aktivní pro: ${pingUrl}`);
+        setInterval(() => {
+            client.get(pingUrl, (res) => {
+                console.log(`[Self-Ping] Ping ok (${res.statusCode})`);
+            }).on('error', (err) => {
+                console.error('[Self-Ping] Chyba self-pingu:', err.message);
+            });
+        }, 10 * 60 * 1000); // každých 10 minut
+    }
 });
 
 mongoose
