@@ -62,11 +62,18 @@ app.listen(PORT, () => {
 
     // Keep-alive ping pro udržení aktivity na Render.com free tieru
     const backendUrl = process.env.RENDER_EXTERNAL_URL || 'https://mirka-pokorna.onrender.com';
-    console.log(`📡 Keep-alive ping aktivní pro: ${backendUrl}/api/health`);
+    const frontendUrl = process.env.FRONTEND_RENDER_URL || 'https://mirka-pokorna-web.onrender.com';
+    console.log(`📡 Keep-alive ping aktivní pro backend: ${backendUrl}/api/health`);
+    console.log(`📡 Keep-alive ping aktivní pro frontend: ${frontendUrl}`);
     setInterval(() => {
+        // Ping backendu
         fetch(`${backendUrl}/api/health`)
-            .then(res => console.log(`[${new Date().toISOString()}] Keep-alive ping ok:`, res.status))
-            .catch(err => console.log(`[${new Date().toISOString()}] Keep-alive ping selhal:`, err.message));
+            .then(res => console.log(`[${new Date().toISOString()}] Backend ping ok:`, res.status))
+            .catch(err => console.log(`[${new Date().toISOString()}] Backend ping selhal:`, err.message));
+        // Ping frontendu
+        fetch(frontendUrl)
+            .then(res => console.log(`[${new Date().toISOString()}] Frontend ping ok:`, res.status))
+            .catch(err => console.log(`[${new Date().toISOString()}] Frontend ping selhal:`, err.message));
     }, 14 * 60 * 1000); // každých 14 minut (Render uspí po 15 min)
 });
 
