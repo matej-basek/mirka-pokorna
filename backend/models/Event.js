@@ -7,6 +7,7 @@ const eventSchema = new mongoose.Schema({
     registrationUrl: { type: String, default: '' },
     date: { type: String, default: '' },
     location: { type: String, default: '' },
+    mapsUrl: { type: String, default: '' },
     price: { type: String, default: '' },
     active: { type: Boolean, default: true },
     order: { type: Number, default: 0 },

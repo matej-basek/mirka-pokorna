@@ -47,7 +47,7 @@ router.get('/:id', async (req, res) => {
 // POST /api/events - Vytvoření akce (Admin)
 router.post('/', auth, upload.single('image'), async (req, res) => {
     try {
-        const { title, description, registrationUrl, date, location, price, active, order } = req.body;
+        const { title, description, registrationUrl, date, location, mapsUrl, price, active, order } = req.body;
         let imageUrl = req.body.imageUrl || '';
         if (req.file) {
             imageUrl = `/uploads/${req.file.filename}`;
@@ -60,6 +60,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
             registrationUrl,
             date,
             location,
+            mapsUrl: mapsUrl || '',
             price,
             active: active !== undefined ? active === 'true' || active === true : true,
             order: order ? Number(order) : 0,
@@ -75,13 +76,14 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
 // PUT /api/events/:id - Úprava akce (Admin)
 router.put('/:id', auth, upload.single('image'), async (req, res) => {
     try {
-        const { title, description, registrationUrl, date, location, price, active, order } = req.body;
+        const { title, description, registrationUrl, date, location, mapsUrl, price, active, order } = req.body;
         const updateData = {
             title,
             description,
             registrationUrl,
             date,
             location,
+            mapsUrl: mapsUrl || '',
             price,
             order: order ? Number(order) : 0,
         };

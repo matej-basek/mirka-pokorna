@@ -27,6 +27,7 @@ interface EventItem {
   registrationUrl?: string;
   date?: string;
   location?: string;
+  mapsUrl?: string;
   price?: string;
   active: boolean;
 }
@@ -49,6 +50,7 @@ export default function AdminEventsPage() {
     description: '',
     date: '',
     location: '',
+    mapsUrl: '',
     price: '',
     registrationUrl: '',
     active: true,
@@ -114,6 +116,7 @@ export default function AdminEventsPage() {
       description: event.description,
       date: event.date || '',
       location: event.location || '',
+      mapsUrl: event.mapsUrl || '',
       price: event.price || '',
       registrationUrl: event.registrationUrl || '',
       active: event.active,
@@ -289,7 +292,7 @@ export default function AdminEventsPage() {
           <p className="text-xs text-slate-500 max-w-sm mx-auto">
             {searchQuery
               ? `Pro výraz "${searchQuery}" nebyly nalezeny žádné výsledky.`
-              : 'V této záložce se nenachází žádné zadané akce.'}
+              : 'Zatím nejsou přidány žádné akce.'}
           </p>
         </div>
       ) : viewMode === 'table' ? (
@@ -651,6 +654,27 @@ export default function AdminEventsPage() {
                   placeholder="Prostor Pro Tebe, Mánesova 54, Praha 2"
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                  style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #ccc' }}
+                  className="w-full text-sm font-medium text-slate-900 focus:outline-none focus:border-[#ba6d86]"
+                />
+              </div>
+
+              {/* Form Group: Maps URL */}
+              <div>
+                <label
+                  style={{ textTransform: 'none', fontSize: '0.9rem', fontWeight: 500, marginBottom: '0.5rem', display: 'block' }}
+                  className="text-slate-700"
+                >
+                  Odkaz na mapy
+                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 400, marginLeft: '6px' }}>
+                    (kliknutelná adresa v pop-up okně)
+                  </span>
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://maps.google.com/..."
+                  value={formData.mapsUrl}
+                  onChange={(e) => setFormData({ ...formData, mapsUrl: e.target.value })}
                   style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #ccc' }}
                   className="w-full text-sm font-medium text-slate-900 focus:outline-none focus:border-[#ba6d86]"
                 />

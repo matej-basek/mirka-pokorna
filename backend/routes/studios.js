@@ -35,7 +35,7 @@ router.get('/', async (req, res) => {
 // POST /api/studios
 router.post('/', auth, upload.single('photo'), async (req, res) => {
     try {
-        const { name, location, description, order, lessons } = req.body;
+        const { name, location, description, order, lessons, mapsUrl, registrationUrl } = req.body;
         let photoUrl = req.body.photoUrl || '';
         if (req.file) {
             photoUrl = `/uploads/${req.file.filename}`;
@@ -51,6 +51,8 @@ router.post('/', auth, upload.single('photo'), async (req, res) => {
             location,
             description,
             photoUrl,
+            mapsUrl: mapsUrl || '',
+            registrationUrl: registrationUrl || '',
             order: order ? Number(order) : 0,
             lessons: parsedLessons,
         });
@@ -65,8 +67,11 @@ router.post('/', auth, upload.single('photo'), async (req, res) => {
 // PUT /api/studios/:id
 router.put('/:id', auth, upload.single('photo'), async (req, res) => {
     try {
-        const { name, location, description, order, lessons } = req.body;
+        const { name, location, description, order, lessons, mapsUrl, registrationUrl } = req.body;
         const updateData = { name, location, description, order: order ? Number(order) : 0 };
+
+        if (mapsUrl !== undefined) updateData.mapsUrl = mapsUrl;
+        if (registrationUrl !== undefined) updateData.registrationUrl = registrationUrl;
 
         if (lessons !== undefined) {
             updateData.lessons = typeof lessons === 'string' ? JSON.parse(lessons) : lessons;

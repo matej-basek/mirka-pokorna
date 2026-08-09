@@ -10,6 +10,12 @@ const getBaseUrl = () => {
   return apiUrl.replace('/api', '');
 };
 
+const getImageSrc = (url?: string) => {
+  if (!url) return '';
+  if (url.startsWith('http')) return url;
+  return `${getBaseUrl()}${url}`;
+};
+
 interface EventItem {
   _id: string;
   title: string;
@@ -18,6 +24,7 @@ interface EventItem {
   registrationUrl?: string;
   date?: string;
   location?: string;
+  mapsUrl?: string;
   price?: string;
   active: boolean;
 }
@@ -107,7 +114,7 @@ export default function EventsSection() {
           <div className="gradient-line" style={{ margin: '16px auto 0' }} />
         </motion.div>
 
-        {/* Posters grid */}
+        {/* Events grid — vždy 3 sloupce, pevná velikost */}
         {events.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -146,9 +153,10 @@ export default function EventsSection() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '28px',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '24px',
             }}
+            className="events-grid"
           >
             {events.map((event, i) => (
               <motion.div
@@ -156,55 +164,66 @@ export default function EventsSection() {
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.12 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
                 onClick={() => setSelected(event)}
                 className="glass glass-hover"
                 style={{
-                  borderRadius: '24px',
-                  padding: '24px',
+                  borderRadius: '20px',
+                  padding: '20px',
                   cursor: 'pointer',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  minHeight: '320px',
                 }}
               >
                 <div>
                   {event.imageUrl && (
-                    <div style={{ width: '100%', aspectRatio: '9 / 16', borderRadius: '16px', overflow: 'hidden', marginBottom: '20px', background: 'rgba(0,0,0,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <img src={event.imageUrl.startsWith('http') ? event.imageUrl : `${getBaseUrl()}${event.imageUrl}`} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '16px' }} />
+                    <div style={{
+                      width: '100%',
+                      aspectRatio: '3 / 4',
+                      borderRadius: '12px',
+                      overflow: 'hidden',
+                      marginBottom: '16px',
+                      background: 'rgba(0,0,0,0.03)',
+                    }}>
+                      <img
+                        src={getImageSrc(event.imageUrl)}
+                        alt={event.title}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
+                      />
                     </div>
                   )}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#e4b4c3', fontSize: '16px', fontWeight: 700 }}>
-                      <Calendar size={18} />
+
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#e4b4c3', fontSize: '14px', fontWeight: 700 }}>
+                      <Calendar size={15} />
                       <span>{event.date || 'Termín dle dohody'}</span>
                     </div>
                     {event.price && (
-                      <span style={{ background: 'rgba(228, 180, 195,0.2)', border: '1px solid rgba(228, 180, 195,0.4)', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', color: '#111', fontWeight: 700 }}>
+                      <span style={{ background: 'rgba(228, 180, 195,0.2)', border: '1px solid rgba(228, 180, 195,0.4)', padding: '3px 8px', borderRadius: '20px', fontSize: '11px', color: '#111', fontWeight: 700 }}>
                         {event.price}
                       </span>
                     )}
                   </div>
 
-                  <h3 className="event-card-title" style={{ fontSize: '1.4rem', color: '#111', marginBottom: '12px', lineHeight: 1.25 }}>
+                  <h3 className="event-card-title" style={{ fontSize: '1.15rem', color: '#111', marginBottom: '10px', lineHeight: 1.3 }}>
                     {event.title}
                   </h3>
 
                   {event.location && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'rgba(17, 17, 17,0.6)', fontSize: '13px', marginBottom: '16px' }}>
-                      <MapPin size={14} />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'rgba(17, 17, 17,0.6)', fontSize: '12px', marginBottom: '12px' }}>
+                      <MapPin size={12} />
                       <span>{event.location}</span>
                     </div>
                   )}
 
-                  <p style={{ color: 'rgba(17, 17, 17,0.75)', fontSize: '14px', lineHeight: '1.7' }}>
+                  <p style={{ color: 'rgba(17, 17, 17,0.7)', fontSize: '13px', lineHeight: '1.6', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                     {event.description}
                   </p>
                 </div>
 
-                <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.1)', color: '#e4b4c3', fontSize: '16px', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span>Detail akce & rezervace →</span>
+                <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.1)', color: '#e4b4c3', fontSize: '14px', fontWeight: 700 }}>
+                  Detail akce & rezervace →
                 </div>
               </motion.div>
             ))}
@@ -254,20 +273,58 @@ export default function EventsSection() {
                 ×
               </button>
 
-              <h3 className="event-card-title" style={{ fontSize: '1.8rem', marginBottom: '16px', color: '#111' }}>
+              <h3 className="event-card-title" style={{ fontSize: '1.6rem', marginBottom: '12px', color: '#111', paddingRight: '40px' }}>
                 {selected.title}
               </h3>
 
+              {/* Plakát — menší, max výška omezena */}
               {selected.imageUrl && (
-                <div style={{ width: '100%', aspectRatio: '9 / 16', borderRadius: '20px', overflow: 'hidden', marginBottom: '24px', background: 'rgba(0,0,0,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <img src={selected.imageUrl.startsWith('http') ? selected.imageUrl : `${getBaseUrl()}${selected.imageUrl}`} alt={selected.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '16px' }} />
+                <div style={{
+                  width: '100%',
+                  maxHeight: '280px',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  marginBottom: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'rgba(0,0,0,0.03)',
+                }}>
+                  <img
+                    src={getImageSrc(selected.imageUrl)}
+                    alt={selected.title}
+                    style={{ width: '100%', maxHeight: '280px', objectFit: 'contain' }}
+                  />
                 </div>
               )}
 
               {selected.date && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', color: '#e4b4c3', fontSize: '16px', fontWeight: 700 }}>
-                  <Calendar size={18} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px', color: '#e4b4c3', fontSize: '15px', fontWeight: 700 }}>
+                  <Calendar size={16} />
                   <span>{selected.date}</span>
+                </div>
+              )}
+
+              {selected.location && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', color: 'rgba(17,17,17,0.65)', fontSize: '14px' }}>
+                  <MapPin size={15} style={{ color: '#e4b4c3', flexShrink: 0 }} />
+                  {selected.mapsUrl ? (
+                    <div>
+                      <a
+                        href={selected.mapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#ba6d86', textDecoration: 'underline', fontWeight: 600 }}
+                      >
+                        {selected.location}
+                      </a>
+                      <span style={{ fontSize: '11px', color: 'rgba(17,17,17,0.4)', marginLeft: '6px' }}>
+                        (klikni pro mapy)
+                      </span>
+                    </div>
+                  ) : (
+                    <span>{selected.location}</span>
+                  )}
                 </div>
               )}
 
@@ -301,8 +358,23 @@ export default function EventsSection() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Responsivní grid styly */}
+      <style jsx>{`
+        .events-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        @media (max-width: 900px) {
+          .events-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+        @media (max-width: 580px) {
+          .events-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
-
-

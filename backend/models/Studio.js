@@ -13,6 +13,7 @@ const lessonSchema = new mongoose.Schema({
 const studioSchema = new mongoose.Schema({
     name: { type: String, required: true },
     photoUrl: { type: String, default: '' },
+    mapsUrl: { type: String, default: '' },
     location: { type: String, default: '' },
     description: { type: String, default: '' },
     registrationUrl: { type: String, default: '' },

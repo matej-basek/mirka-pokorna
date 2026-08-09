@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Clock, BookOpen, Info, MapPin } from 'lucide-react';
+import { Calendar, Clock, BookOpen, Info, MapPin, ExternalLink } from 'lucide-react';
+import Image from 'next/image';
 import axios from 'axios';
 
 interface Lesson {
@@ -22,6 +23,7 @@ interface StudioItem {
   location?: string;
   description?: string;
   photoUrl?: string;
+  mapsUrl?: string;
   registrationUrl?: string;
   lessons: Lesson[];
 }
@@ -71,6 +73,14 @@ const fallbackStudios: StudioItem[] = [
     ],
   },
 ];
+
+const getPhotoUrl = (url?: string) => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const backendOrigin = apiUrl.replace(/\/api\/?$/, '');
+  return `${backendOrigin}${url.startsWith('/') ? '' : '/'}${url}`;
+};
 
 export default function ScheduleSection() {
   const [studios, setStudios] = useState<StudioItem[]>(fallbackStudios);
@@ -263,12 +273,44 @@ export default function ScheduleSection() {
                 ×
               </button>
 
-              <h3 className="card-title" style={{ fontSize: '1.8rem', marginBottom: '8px' }}>
-                {selected.name}
-              </h3>
+              {/* Fotka studia nad názvem */}
+              {selected.photoUrl && getPhotoUrl(selected.photoUrl) && (
+                <div style={{ width: '100%', borderRadius: '16px', overflow: 'hidden', marginBottom: '20px', maxHeight: '220px' }}>
+                  <img
+                    src={getPhotoUrl(selected.photoUrl)}
+                    alt={selected.name}
+                    style={{ width: '100%', height: '220px', objectFit: 'cover' }}
+                  />
+                </div>
+              )}
+
+              {/* Název studia — kliknutelný odkaz na mapy pokud je nastaven */}
+              {selected.mapsUrl ? (
+                <div style={{ marginBottom: '4px' }}>
+                  <a
+                    href={selected.mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                    title="Otevřít v mapách"
+                  >
+                    <h3 className="card-title" style={{ fontSize: '1.8rem', color: '#111', margin: 0 }}>
+                      {selected.name}
+                    </h3>
+                    <ExternalLink size={18} style={{ color: '#e4b4c3', flexShrink: 0, marginTop: '4px' }} />
+                  </a>
+                  <p style={{ fontSize: '11px', color: 'rgba(17,17,17,0.45)', marginTop: '2px', marginBottom: '0' }}>
+                    Klikni na název pro zobrazení v mapách
+                  </p>
+                </div>
+              ) : (
+                <h3 className="card-title" style={{ fontSize: '1.8rem', marginBottom: '8px' }}>
+                  {selected.name}
+                </h3>
+              )}
 
               {selected.location && (
-                <p style={{ color: '#e4b4c3', fontSize: '16px', fontWeight: 700, marginBottom: '24px' }}>
+                <p style={{ color: '#e4b4c3', fontSize: '15px', fontWeight: 700, marginBottom: '24px', marginTop: '8px' }}>
                   📍 {selected.location}
                 </p>
               )}
@@ -335,5 +377,3 @@ export default function ScheduleSection() {
     </section>
   );
 }
-
-

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Plus,
   Trash2,
@@ -12,7 +12,8 @@ import {
   LayoutGrid,
   Table as TableIcon,
   X,
-  BookOpen
+  BookOpen,
+  ExternalLink,
 } from 'lucide-react';
 import api from '@/lib/api';
 
@@ -31,6 +32,8 @@ interface StudioItem {
   location?: string;
   description?: string;
   registrationUrl?: string;
+  photoUrl?: string;
+  mapsUrl?: string;
   lessons: Lesson[];
 }
 
@@ -39,6 +42,8 @@ export default function AdminStudiosPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingStudio, setEditingStudio] = useState<StudioItem | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
@@ -48,13 +53,32 @@ export default function AdminStudiosPage() {
     location: '',
     description: '',
     registrationUrl: '',
+    mapsUrl: '',
   });
 
   const [lessons, setLessons] = useState<Lesson[]>([]);
 
+  const getPhotoUrl = (url?: string) => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('blob:')) return url;
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    const backendOrigin = apiUrl.replace(/\/api\/?$/, '');
+    return `${backendOrigin}${url.startsWith('/') ? '' : '/'}${url}`;
+  };
+
   useEffect(() => {
     fetchStudios();
   }, []);
+
+  useEffect(() => {
+    if (imageFile) {
+      const url = URL.createObjectURL(imageFile);
+      setImagePreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setImagePreviewUrl(null);
+    }
+  }, [imageFile]);
 
   const fetchStudios = async () => {
     try {
@@ -69,18 +93,23 @@ export default function AdminStudiosPage() {
 
   const openAddModal = () => {
     setEditingStudio(null);
-    setFormData({ name: '', location: '', description: '', registrationUrl: '' });
+    setImageFile(null);
+    setImagePreviewUrl(null);
+    setFormData({ name: '', location: '', description: '', registrationUrl: '', mapsUrl: '' });
     setLessons([]);
     setShowModal(true);
   };
 
   const openEditModal = (studio: StudioItem) => {
     setEditingStudio(studio);
+    setImageFile(null);
+    setImagePreviewUrl(null);
     setFormData({
       name: studio.name,
       location: studio.location || '',
       description: studio.description || '',
       registrationUrl: studio.registrationUrl || '',
+      mapsUrl: studio.mapsUrl || '',
     });
     setLessons(studio.lessons || []);
     setShowModal(true);
@@ -89,18 +118,27 @@ export default function AdminStudiosPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const payload = { ...formData, lessons };
+      const data = new FormData();
+      data.append('name', formData.name);
+      data.append('location', formData.location);
+      data.append('description', formData.description);
+      data.append('registrationUrl', formData.registrationUrl);
+      data.append('mapsUrl', formData.mapsUrl);
+      data.append('lessons', JSON.stringify(lessons));
+      if (imageFile) data.append('photo', imageFile);
 
       if (editingStudio) {
-        await api.put(`/studios/${editingStudio._id}`, payload);
+        await api.put(`/studios/${editingStudio._id}`, data, { headers: { 'Content-Type': 'multipart/form-data' } });
       } else {
-        await api.post('/studios', payload);
+        await api.post('/studios', data, { headers: { 'Content-Type': 'multipart/form-data' } });
       }
       
       fetchStudios();
       setShowModal(false);
       setEditingStudio(null);
-      setFormData({ name: '', location: '', description: '', registrationUrl: '' });
+      setImageFile(null);
+      setImagePreviewUrl(null);
+      setFormData({ name: '', location: '', description: '', registrationUrl: '', mapsUrl: '' });
       setLessons([]);
     } catch (err) {
       console.error('Chyba při ukládání rozvrhu', err);
@@ -451,6 +489,26 @@ export default function AdminStudiosPage() {
                   style={{ textTransform: 'none', fontSize: '0.9rem', fontWeight: 500, marginBottom: '0.5rem', display: 'block' }}
                   className="text-slate-700"
                 >
+                  Odkaz na mapy
+                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 400, marginLeft: '6px' }}>
+                    (kliknutelný název studia v pop-up okně)
+                  </span>
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://maps.google.com/..."
+                  value={formData.mapsUrl}
+                  onChange={(e) => setFormData({ ...formData, mapsUrl: e.target.value })}
+                  style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #ccc' }}
+                  className="w-full text-sm font-medium text-slate-900 focus:outline-none focus:border-[#ba6d86]"
+                />
+              </div>
+
+              <div>
+                <label
+                  style={{ textTransform: 'none', fontSize: '0.9rem', fontWeight: 500, marginBottom: '0.5rem', display: 'block' }}
+                  className="text-slate-700"
+                >
                   Odkaz na rezervaci (Google Forms)
                 </label>
                 <input
@@ -460,6 +518,38 @@ export default function AdminStudiosPage() {
                   onChange={(e) => setFormData({ ...formData, registrationUrl: e.target.value })}
                   style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #ccc' }}
                   className="w-full text-sm font-medium text-slate-900 focus:outline-none focus:border-[#ba6d86]"
+                />
+              </div>
+
+              {/* Fotka studia */}
+              <div>
+                <label
+                  style={{ textTransform: 'none', fontSize: '0.9rem', fontWeight: 500, marginBottom: '0.5rem', display: 'block' }}
+                  className="text-slate-700"
+                >
+                  Fotka studia
+                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 400, marginLeft: '6px' }}>
+                    (zobrazí se v pop-up okně nad názvem)
+                  </span>
+                </label>
+                {(imagePreviewUrl || editingStudio?.photoUrl) && (
+                  <div style={{ maxHeight: '160px', marginBottom: '0.75rem', position: 'relative' }} className="w-full overflow-hidden bg-slate-50 rounded-lg border border-slate-200 p-2 flex items-center justify-center">
+                    <img
+                      src={imagePreviewUrl || getPhotoUrl(editingStudio?.photoUrl)}
+                      alt="Preview"
+                      style={{ objectFit: 'contain', borderRadius: '8px', maxWidth: '100%', maxHeight: '140px', width: 'auto', height: 'auto' }}
+                    />
+                    {imagePreviewUrl && (
+                      <button type="button" onClick={() => setImageFile(null)} className="absolute top-2 right-2 bg-rose-600 text-white p-1 rounded-full hover:bg-rose-700 text-xs shadow-md">
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                )}
+                <input
+                  type="file" accept="image/*"
+                  onChange={(e) => { if (e.target.files?.[0]) setImageFile(e.target.files[0]); }}
+                  className="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#ba6d86] file:text-white hover:file:bg-[#a05a70] cursor-pointer"
                 />
               </div>
 
