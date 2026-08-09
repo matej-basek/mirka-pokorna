@@ -273,20 +273,20 @@ export default function ScheduleSection() {
                 ×
               </button>
 
-              {/* Fotka studia nad názvem — rozumná velikost, zachovaný poměr stran, vycentrovaná */}
+              {/* Fotka studia nad názvem — větší velikost (maxHeight 420px), zachovaný poměr stran bez ořezu */}
               {selected.photoUrl && getPhotoUrl(selected.photoUrl) && (
                 <div
                   style={{
                     width: '100%',
-                    maxHeight: '240px',
-                    borderRadius: '16px',
+                    maxHeight: '420px',
+                    borderRadius: '18px',
                     overflow: 'hidden',
                     marginBottom: '20px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: 'rgba(228, 180, 195, 0.08)',
-                    padding: '8px',
+                    background: 'rgba(228, 180, 195, 0.06)',
+                    padding: '6px',
                   }}
                 >
                   <img
@@ -294,11 +294,11 @@ export default function ScheduleSection() {
                     alt={selected.name}
                     style={{
                       maxWidth: '100%',
-                      maxHeight: '224px',
+                      maxHeight: '408px',
                       width: 'auto',
                       height: 'auto',
                       objectFit: 'contain',
-                      borderRadius: '12px',
+                      borderRadius: '14px',
                       display: 'block',
                     }}
                   />

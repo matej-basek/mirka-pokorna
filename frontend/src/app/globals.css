@@ -322,9 +322,9 @@ h1, h2, h3, h4, .font-heading, .section-title {
     font-size: 1.35rem !important;
   }
 
-  /* Fotky v modalech na mobilu rozumně omezeny na výšku */
+  /* Fotky v modalech na mobilu umožňují až 300px výšku bez ořezu */
   .modal-content img {
-    max-height: 200px !important;
+    max-height: 300px !important;
     width: auto !important;
     max-width: 100% !important;
     object-fit: contain !important;
@@ -333,7 +333,7 @@ h1, h2, h3, h4, .font-heading, .section-title {
 
   .modal-content div[style*="maxHeight"],
   .modal-content div[style*="max-height"] {
-    max-height: 200px !important;
+    max-height: 300px !important;
   }
 }
 

@@ -260,13 +260,13 @@ export default function ServicesSection() {
               
               <div style={{ textAlign: 'center', marginBottom: '24px' }}>
                 {selectedService.imageUrl ? (
-                  <div style={{ position: 'relative', width: '100%', maxHeight: '240px', borderRadius: '16px', overflow: 'hidden', marginBottom: '24px', boxShadow: '0 8px 24px rgba(228, 180, 195, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(228, 180, 195, 0.08)', padding: '8px' }}>
+                  <div style={{ position: 'relative', width: '100%', maxHeight: '420px', borderRadius: '18px', overflow: 'hidden', marginBottom: '24px', boxShadow: '0 8px 24px rgba(228, 180, 195, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(228, 180, 195, 0.06)', padding: '6px' }}>
                     <Image 
                       src={getImageUrl(selectedService.imageUrl)} 
                       alt={selectedService.title} 
                       width={800} 
                       height={600} 
-                      style={{ maxWidth: '100%', maxHeight: '224px', width: 'auto', height: 'auto', objectFit: 'contain' }} 
+                      style={{ maxWidth: '100%', maxHeight: '408px', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: '14px' }} 
                     />
                   </div>
                 ) : (
