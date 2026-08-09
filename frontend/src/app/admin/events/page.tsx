@@ -100,6 +100,7 @@ export default function AdminEventsPage() {
       description: '',
       date: '',
       location: '',
+      mapsUrl: '',
       price: '',
       registrationUrl: '',
       active: true,
