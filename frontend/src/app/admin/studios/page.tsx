@@ -488,21 +488,10 @@ export default function AdminStudiosPage() {
                   Popis studia
                 </label>
                 <textarea
-                  rows={2}
+                  rows={4}
                   value={formData.description}
-                  ref={(el) => {
-                    if (el) {
-                      el.style.height = 'auto';
-                      el.style.height = `${Math.max(80, el.scrollHeight + 4)}px`;
-                    }
-                  }}
-                  onInput={(e) => {
-                    const target = e.currentTarget;
-                    target.style.height = 'auto';
-                    target.style.height = `${Math.max(80, target.scrollHeight + 4)}px`;
-                  }}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #ccc', minHeight: '80px' }}
+                  style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #ccc', minHeight: '100px' }}
                   className="w-full text-sm font-medium text-slate-900 focus:outline-none focus:border-[#ba6d86] resize-y"
                 />
               </div>

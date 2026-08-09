@@ -339,9 +339,9 @@ export default function EventsSection() {
                 </div>
               )}
 
-              <p style={{ color: 'rgba(17, 17, 17,0.8)', lineHeight: '1.8', marginBottom: '28px', fontSize: '15px' }}>
+              <div style={{ color: 'rgba(17, 17, 17,0.85)', lineHeight: '1.8', marginBottom: '28px', fontSize: '15px', whiteSpace: 'pre-line', textAlign: 'left' }}>
                 {selected.description}
-              </p>
+              </div>
 
               {selected.registrationUrl ? (
                 <a

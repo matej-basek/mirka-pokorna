@@ -483,22 +483,11 @@ export default function AdminServicesPage() {
                 </label>
                 <textarea
                   required
-                  rows={3}
+                  rows={5}
                   placeholder="Detailní popis služby..."
                   value={formData.description}
-                  ref={(el) => {
-                    if (el) {
-                      el.style.height = 'auto';
-                      el.style.height = `${Math.max(100, el.scrollHeight + 4)}px`;
-                    }
-                  }}
-                  onInput={(e) => {
-                    const target = e.currentTarget;
-                    target.style.height = 'auto';
-                    target.style.height = `${Math.max(100, target.scrollHeight + 4)}px`;
-                  }}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #ccc', minHeight: '100px' }}
+                  style={{ padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #ccc', minHeight: '120px' }}
                   className="w-full text-sm font-medium text-slate-900 focus:outline-none focus:border-[#ba6d86] resize-y"
                 />
               </div>

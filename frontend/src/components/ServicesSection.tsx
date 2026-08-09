@@ -283,9 +283,9 @@ export default function ServicesSection() {
                 </div>
               </div>
               
-              <p style={{ color: 'rgba(17, 17, 17,0.85)', fontSize: '15px', lineHeight: '1.7', marginBottom: '32px', textAlign: 'center' }}>
+              <div style={{ color: 'rgba(17, 17, 17,0.85)', fontSize: '15px', lineHeight: '1.8', marginBottom: '32px', textAlign: 'left', whiteSpace: 'pre-line' }}>
                 {selectedService.description}
-              </p>
+              </div>
               
               <button
                 onClick={() => {

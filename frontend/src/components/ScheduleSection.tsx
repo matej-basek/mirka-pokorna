@@ -212,7 +212,7 @@ export default function ScheduleSection() {
                   )}
 
                   {studio.description && (
-                    <p style={{ color: 'rgba(17, 17, 17,0.75)', fontSize: '13.5px', lineHeight: '1.6', marginBottom: '20px' }}>
+                    <p style={{ color: 'rgba(17, 17, 17,0.75)', fontSize: '13.5px', lineHeight: '1.6', marginBottom: '20px', whiteSpace: 'pre-line' }}>
                       {studio.description}
                     </p>
                   )}
