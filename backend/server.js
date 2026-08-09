@@ -60,22 +60,14 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/mirkapokor
 app.listen(PORT, () => {
     console.log(`🚀 Backend server mirkapokorna.cz běží na portu ${PORT}`);
 
-    // Self-ping pro udržení aktivity na Render.com
-    // Render nastavuje RENDER_EXTERNAL_URL automaticky; lze přepsat přes SELF_PING_URL
-    const renderUrl =
-        process.env.RENDER_EXTERNAL_URL ||
-        process.env.SELF_PING_URL ||
-        'https://mirka-pokorna.onrender.com'; // záložní URL backendu na Render.com
-    const pingUrl = `${renderUrl.replace(/\/$/, '')}/api/health`;
-    const client = pingUrl.startsWith('https') ? require('https') : require('http');
-    console.log(`📡 Self-ping aktivní pro: ${pingUrl}`);
+    // Keep-alive ping pro udržení aktivity na Render.com free tieru
+    const backendUrl = process.env.RENDER_EXTERNAL_URL || 'https://mirka-pokorna.onrender.com';
+    console.log(`📡 Keep-alive ping aktivní pro: ${backendUrl}/api/health`);
     setInterval(() => {
-        client.get(pingUrl, (res) => {
-            console.log(`[Self-Ping] Ping ok (${res.statusCode})`);
-        }).on('error', (err) => {
-            console.error('[Self-Ping] Chyba self-pingu:', err.message);
-        });
-    }, 8 * 60 * 1000); // každých 8 minut (Render uspí po 15 min)
+        fetch(`${backendUrl}/api/health`)
+            .then(res => console.log(`[${new Date().toISOString()}] Keep-alive ping ok:`, res.status))
+            .catch(err => console.log(`[${new Date().toISOString()}] Keep-alive ping selhal:`, err.message));
+    }, 14 * 60 * 1000); // každých 14 minut (Render uspí po 15 min)
 });
 
 mongoose
