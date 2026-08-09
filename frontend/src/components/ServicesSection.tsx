@@ -201,9 +201,7 @@ export default function ServicesSection() {
                   <div style={{ fontSize: '12px', fontWeight: 600, color: '#111', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>
                     {service.subtitle}
                   </div>
-                  <p style={{ color: 'rgba(17, 17, 17,0.75)', fontSize: '14px', lineHeight: '1.7', marginBottom: '24px' }}>
-                    {service.description}
-                  </p>
+
 
                   <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px', marginBottom: '24px' }}>
                     {service.benefits.map((b, idx) => (

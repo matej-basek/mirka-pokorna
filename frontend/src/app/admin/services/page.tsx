@@ -580,7 +580,7 @@ export default function AdminServicesPage() {
               {/* Obrázek */}
               <div>
                 <label style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.4rem', display: 'block' }} className="text-slate-700">
-                  Obrázek pro detail (volitelné)
+                  Fotka detail
                 </label>
                 {(imagePreviewUrl || editingService?.imageUrl) && (
                   <div style={{ maxHeight: '160px', marginBottom: '0.75rem', position: 'relative' }} className="w-full overflow-hidden bg-slate-50 rounded-lg border border-slate-200 p-2 flex items-center justify-center">
