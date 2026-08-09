@@ -27,3 +27,7 @@ backend/uploads/*
 Thumbs.db
 .vscode/
 .idea/
+
+# Local docs / Manuals
+NAVOD_A_DOKUMENTACE.md
+NAVOD_PRO_KLIENTKU.*
