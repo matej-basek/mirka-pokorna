@@ -273,30 +273,25 @@ export default function EventsSection() {
                 ×
               </button>
 
-              <h3 className="event-card-title" style={{ fontSize: '1.6rem', marginBottom: '12px', color: '#111', paddingRight: '40px' }}>
-                {selected.title}
-              </h3>
-
-              {/* Plakát — menší, max výška omezena */}
+              {/* Plakát — natáhne se na šířku, výška dle fotky */}
               {selected.imageUrl && (
                 <div style={{
                   width: '100%',
-                  maxHeight: '280px',
                   borderRadius: '16px',
                   overflow: 'hidden',
                   marginBottom: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: 'rgba(0,0,0,0.03)',
                 }}>
                   <img
                     src={getImageSrc(selected.imageUrl)}
                     alt={selected.title}
-                    style={{ width: '100%', maxHeight: '280px', objectFit: 'contain' }}
+                    style={{ width: '100%', height: 'auto', objectFit: 'contain', display: 'block' }}
                   />
                 </div>
               )}
+
+              <h3 className="event-card-title" style={{ fontSize: '1.6rem', marginBottom: '12px', color: '#111', paddingRight: '40px' }}>
+                {selected.title}
+              </h3>
 
               {selected.date && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px', color: '#e4b4c3', fontSize: '15px', fontWeight: 700 }}>

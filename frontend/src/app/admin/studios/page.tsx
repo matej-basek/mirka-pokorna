@@ -270,8 +270,19 @@ export default function AdminStudiosPage() {
               <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
                 {filteredStudios.map((studio) => (
                   <tr key={studio._id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-3.5 px-4 font-bold text-slate-900 text-sm not-italic" style={{ fontFamily: '"Outfit", "Inter", sans-serif', fontWeight: 700 }}>
-                      {studio.name}
+                    <td className="py-3.5 px-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-lg bg-slate-50 border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center text-slate-400">
+                          {studio.photoUrl ? (
+                            <img src={getPhotoUrl(studio.photoUrl)} alt="" className="w-full h-full object-cover" />
+                          ) : (
+                            <Building2 className="w-5 h-5 text-slate-300" />
+                          )}
+                        </div>
+                        <span className="font-bold text-slate-900 text-sm not-italic" style={{ fontFamily: '"Outfit", "Inter", sans-serif', fontWeight: 700 }}>
+                          {studio.name}
+                        </span>
+                      </div>
                     </td>
                     <td className="py-3.5 px-4 text-slate-700 font-medium">
                       <div className="flex items-center gap-1.5">
@@ -319,9 +330,20 @@ export default function AdminStudiosPage() {
           {filteredStudios.map((studio) => (
             <div
               key={studio._id}
-              className="bg-white rounded-xl border border-slate-200 shadow-xs hover:border-slate-300 transition-all p-5 flex flex-col justify-between"
+              className="bg-white rounded-xl border border-slate-200 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between overflow-hidden"
             >
-              <div className="space-y-4">
+              {/* Fotka studia */}
+              <div className="bg-gradient-to-br from-pink-50 to-rose-50 border-b border-slate-100 flex items-center justify-center min-h-[100px] overflow-hidden">
+                {studio.photoUrl ? (
+                  <img src={getPhotoUrl(studio.photoUrl)} alt="" className="w-full object-cover" style={{ maxHeight: '160px' }} />
+                ) : (
+                  <div className="w-16 h-16 rounded-2xl bg-white border border-pink-100 shadow-xs flex items-center justify-center">
+                    <Building2 className="w-8 h-8 text-[#ba6d86]" />
+                  </div>
+                )}
+              </div>
+
+              <div className="p-5 space-y-4 flex flex-col flex-1">
                 <div>
                   <h3
                     className="font-bold text-slate-900 text-lg not-italic"
@@ -369,7 +391,8 @@ export default function AdminStudiosPage() {
                   alignItems: 'center',
                   borderTop: '1px solid #eaeaea',
                   paddingTop: '12px',
-                  marginTop: '12px'
+                  marginTop: '12px',
+                  padding: '12px 20px 16px',
                 }}
               >
                 <span className="text-xs text-slate-400 font-medium">ID: ...{studio._id.slice(-6)}</span>

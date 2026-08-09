@@ -275,11 +275,11 @@ export default function ScheduleSection() {
 
               {/* Fotka studia nad názvem */}
               {selected.photoUrl && getPhotoUrl(selected.photoUrl) && (
-                <div style={{ width: '100%', borderRadius: '16px', overflow: 'hidden', marginBottom: '20px', maxHeight: '220px' }}>
+                <div style={{ width: '100%', borderRadius: '16px', overflow: 'hidden', marginBottom: '20px' }}>
                   <img
                     src={getPhotoUrl(selected.photoUrl)}
                     alt={selected.name}
-                    style={{ width: '100%', height: '220px', objectFit: 'cover' }}
+                    style={{ width: '100%', height: 'auto', objectFit: 'contain', display: 'block' }}
                   />
                 </div>
               )}
