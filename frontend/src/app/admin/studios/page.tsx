@@ -128,9 +128,9 @@ export default function AdminStudiosPage() {
       if (imageFile) data.append('photo', imageFile);
 
       if (editingStudio) {
-        await api.put(`/studios/${editingStudio._id}`, data, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await api.put(`/studios/${editingStudio._id}`, data);
       } else {
-        await api.post('/studios', data, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await api.post('/studios', data);
       }
       
       fetchStudios();

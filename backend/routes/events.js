@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Event = require('../models/Event');
 const auth = require('../middleware/auth');
-const { upload } = require('../config/cloudinary');
+const { upload, getUploadedFileUrl } = require('../config/cloudinary');
 
 // GET /api/events - Veřejný výpis akcí
 router.get('/', async (req, res) => {
@@ -31,7 +31,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
         const { title, description, registrationUrl, date, location, mapsUrl, price, active, order } = req.body;
         let imageUrl = req.body.imageUrl || '';
         if (req.file) {
-            imageUrl = req.file.path; // Cloudinary vrací plnou https:// URL v req.file.path
+            imageUrl = getUploadedFileUrl(req.file);
         }
 
         const newEvent = new Event({
@@ -50,7 +50,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
         await newEvent.save();
         res.status(201).json(newEvent);
     } catch (err) {
-        console.error(err);
+        console.error('Chyba při POST /api/events:', err);
         res.status(500).json({ message: 'Chyba při vytváření akce.' });
     }
 });
@@ -74,7 +74,7 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
         }
 
         if (req.file) {
-            updateData.imageUrl = req.file.path; // Cloudinary URL
+            updateData.imageUrl = getUploadedFileUrl(req.file);
         } else if (req.body.imageUrl !== undefined) {
             updateData.imageUrl = req.body.imageUrl;
         }
@@ -84,7 +84,7 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
 
         res.json(updatedEvent);
     } catch (err) {
-        console.error(err);
+        console.error('Chyba při PUT /api/events:', err);
         res.status(500).json({ message: 'Chyba při úpravě akce.' });
     }
 });

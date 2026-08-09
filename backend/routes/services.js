@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Service = require('../models/Service');
 const auth = require('../middleware/auth');
-const { upload } = require('../config/cloudinary');
+const { upload, getUploadedFileUrl } = require('../config/cloudinary');
 
 // GET /api/services - Veřejný výpis služeb
 router.get('/', async (req, res) => {
@@ -32,7 +32,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
 
         let imageUrl = req.body.imageUrl || '';
         if (req.file) {
-            imageUrl = req.file.path; // Cloudinary URL
+            imageUrl = getUploadedFileUrl(req.file);
         }
 
         let parsedBenefits = [];
@@ -58,7 +58,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
         await newService.save();
         res.status(201).json(newService);
     } catch (err) {
-        console.error(err);
+        console.error('Chyba při POST /api/services:', err);
         res.status(500).json({ message: 'Chyba při vytváření služby.' });
     }
 });
@@ -91,7 +91,7 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
         }
 
         if (req.file) {
-            updateData.imageUrl = req.file.path; // Cloudinary URL
+            updateData.imageUrl = getUploadedFileUrl(req.file);
         } else if (req.body.imageUrl !== undefined) {
             updateData.imageUrl = req.body.imageUrl;
         }
@@ -101,7 +101,7 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
 
         res.json(updatedService);
     } catch (err) {
-        console.error(err);
+        console.error('Chyba při PUT /api/services:', err);
         res.status(500).json({ message: 'Chyba při úpravě služby.' });
     }
 });

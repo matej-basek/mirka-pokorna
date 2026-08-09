@@ -154,9 +154,9 @@ export default function AdminServicesPage() {
       if (imageFile) data.append('image', imageFile);
 
       if (editingService) {
-        await api.put(`/services/${editingService._id}`, data, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await api.put(`/services/${editingService._id}`, data);
       } else {
-        await api.post('/services', data, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await api.post('/services', data);
       }
 
       fetchServices();

@@ -137,13 +137,9 @@ export default function AdminEventsPage() {
       }
 
       if (editingEvent) {
-        await api.put(`/events/${editingEvent._id}`, data, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        await api.put(`/events/${editingEvent._id}`, data);
       } else {
-        await api.post('/events', data, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        await api.post('/events', data);
       }
       
       fetchEvents();
