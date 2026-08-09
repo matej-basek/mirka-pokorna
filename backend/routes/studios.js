@@ -1,26 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 const Studio = require('../models/Studio');
 const auth = require('../middleware/auth');
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadDir = path.join(__dirname, '../uploads');
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ storage });
+const { upload } = require('../config/cloudinary');
 
 // GET /api/studios
 router.get('/', async (req, res) => {
@@ -38,7 +20,7 @@ router.post('/', auth, upload.single('photo'), async (req, res) => {
         const { name, location, description, order, lessons, mapsUrl, registrationUrl } = req.body;
         let photoUrl = req.body.photoUrl || '';
         if (req.file) {
-            photoUrl = `/uploads/${req.file.filename}`;
+            photoUrl = req.file.path; // Cloudinary URL
         }
 
         let parsedLessons = [];
@@ -60,6 +42,7 @@ router.post('/', auth, upload.single('photo'), async (req, res) => {
         await newStudio.save();
         res.status(201).json(newStudio);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: 'Chyba při vytváření studia/kurzu.' });
     }
 });
@@ -78,7 +61,7 @@ router.put('/:id', auth, upload.single('photo'), async (req, res) => {
         }
 
         if (req.file) {
-            updateData.photoUrl = `/uploads/${req.file.filename}`;
+            updateData.photoUrl = req.file.path; // Cloudinary URL
         } else if (req.body.photoUrl !== undefined) {
             updateData.photoUrl = req.body.photoUrl;
         }
@@ -88,6 +71,7 @@ router.put('/:id', auth, upload.single('photo'), async (req, res) => {
 
         res.json(updatedStudio);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: 'Chyba při úpravě studia.' });
     }
 });

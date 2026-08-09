@@ -1,27 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 const Service = require('../models/Service');
 const auth = require('../middleware/auth');
-
-// Multer storage setup
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadDir = path.join(__dirname, '../uploads');
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ storage });
+const { upload } = require('../config/cloudinary');
 
 // GET /api/services - Veřejný výpis služeb
 router.get('/', async (req, res) => {
@@ -51,10 +32,9 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
 
         let imageUrl = req.body.imageUrl || '';
         if (req.file) {
-            imageUrl = `/uploads/${req.file.filename}`;
+            imageUrl = req.file.path; // Cloudinary URL
         }
 
-        // benefits může přijít jako JSON string nebo pole
         let parsedBenefits = [];
         if (benefits) {
             try {
@@ -111,7 +91,7 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
         }
 
         if (req.file) {
-            updateData.imageUrl = `/uploads/${req.file.filename}`;
+            updateData.imageUrl = req.file.path; // Cloudinary URL
         } else if (req.body.imageUrl !== undefined) {
             updateData.imageUrl = req.body.imageUrl;
         }
