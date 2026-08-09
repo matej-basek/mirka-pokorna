@@ -273,18 +273,34 @@ export default function EventsSection() {
                 ×
               </button>
 
-              {/* Plakát — natáhne se na šířku, výška dle fotky */}
+              {/* Plakát — rozumná velikost, vycentrovaný, zachovaný poměr stran bez ořezu */}
               {selected.imageUrl && (
-                <div style={{
-                  width: '100%',
-                  borderRadius: '16px',
-                  overflow: 'hidden',
-                  marginBottom: '20px',
-                }}>
+                <div
+                  style={{
+                    width: '100%',
+                    maxHeight: '240px',
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                    marginBottom: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'rgba(228, 180, 195, 0.08)',
+                    padding: '8px',
+                  }}
+                >
                   <img
                     src={getImageSrc(selected.imageUrl)}
                     alt={selected.title}
-                    style={{ width: '100%', height: 'auto', objectFit: 'contain', display: 'block' }}
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '224px',
+                      width: 'auto',
+                      height: 'auto',
+                      objectFit: 'contain',
+                      borderRadius: '12px',
+                      display: 'block',
+                    }}
                   />
                 </div>
               )}

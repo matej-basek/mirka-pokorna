@@ -321,6 +321,20 @@ h1, h2, h3, h4, .font-heading, .section-title {
   .modal-overlay h3 {
     font-size: 1.35rem !important;
   }
+
+  /* Fotky v modalech na mobilu rozumně omezeny na výšku */
+  .modal-content img {
+    max-height: 200px !important;
+    width: auto !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+    margin: 0 auto;
+  }
+
+  .modal-content div[style*="maxHeight"],
+  .modal-content div[style*="max-height"] {
+    max-height: 200px !important;
+  }
 }
 
 /* Responsive Flower Overlay */

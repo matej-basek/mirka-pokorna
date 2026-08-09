@@ -273,13 +273,34 @@ export default function ScheduleSection() {
                 ×
               </button>
 
-              {/* Fotka studia nad názvem */}
+              {/* Fotka studia nad názvem — rozumná velikost, zachovaný poměr stran, vycentrovaná */}
               {selected.photoUrl && getPhotoUrl(selected.photoUrl) && (
-                <div style={{ width: '100%', borderRadius: '16px', overflow: 'hidden', marginBottom: '20px' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    maxHeight: '240px',
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                    marginBottom: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'rgba(228, 180, 195, 0.08)',
+                    padding: '8px',
+                  }}
+                >
                   <img
                     src={getPhotoUrl(selected.photoUrl)}
                     alt={selected.name}
-                    style={{ width: '100%', height: 'auto', objectFit: 'contain', display: 'block' }}
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '224px',
+                      width: 'auto',
+                      height: 'auto',
+                      objectFit: 'contain',
+                      borderRadius: '12px',
+                      display: 'block',
+                    }}
                   />
                 </div>
               )}

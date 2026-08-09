@@ -252,7 +252,7 @@ export default function ServicesSection() {
             >
               <button
                 onClick={() => setSelectedService(null)}
-                className="absolute top-4 right-4 p-2 text-black/50 hover:text-black transition-colors"
+                className="absolute top-4 right-4 p-2 text-black/50 hover:text-black transition-colors z-10"
                 aria-label="Zavřít"
               >
                 <X size={28} />
@@ -260,13 +260,13 @@ export default function ServicesSection() {
               
               <div style={{ textAlign: 'center', marginBottom: '24px' }}>
                 {selectedService.imageUrl ? (
-                  <div style={{ position: 'relative', width: '100%', borderRadius: '16px', overflow: 'hidden', marginBottom: '24px', boxShadow: '0 8px 24px rgba(228, 180, 195, 0.15)', display: 'flex', justifyContent: 'center', backgroundColor: 'rgba(228, 180, 195, 0.05)' }}>
+                  <div style={{ position: 'relative', width: '100%', maxHeight: '240px', borderRadius: '16px', overflow: 'hidden', marginBottom: '24px', boxShadow: '0 8px 24px rgba(228, 180, 195, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(228, 180, 195, 0.08)', padding: '8px' }}>
                     <Image 
                       src={getImageUrl(selectedService.imageUrl)} 
                       alt={selectedService.title} 
                       width={800} 
                       height={600} 
-                      style={{ width: '100%', height: 'auto', objectFit: 'contain' }} 
+                      style={{ maxWidth: '100%', maxHeight: '224px', width: 'auto', height: 'auto', objectFit: 'contain' }} 
                     />
                   </div>
                 ) : (
