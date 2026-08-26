@@ -38,6 +38,10 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
+// Root & Health Check (Fast response without waiting for DB)
+app.get('/', (req, res) => res.json({ status: 'ok', message: 'Mirka Pokorna API running on Vercel' }));
+app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
+
 // Database connection helper
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/mirkapokorna';
 let isConnecting = null;
@@ -63,7 +67,7 @@ const connectDB = async () => {
     }
 };
 
-// Auto-connect DB middleware for serverless requests (před všemi routami)
+// Auto-connect DB middleware for API routes
 app.use(async (req, res, next) => {
     try {
         await connectDB();
@@ -72,10 +76,6 @@ app.use(async (req, res, next) => {
     }
     next();
 });
-
-// Root & Health Check
-app.get('/', (req, res) => res.json({ status: 'ok', message: 'Mirka Pokorna API running on Vercel' }));
-app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
 
 // Statická složka pro nahrané soubory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
