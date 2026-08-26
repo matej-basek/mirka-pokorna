@@ -37,18 +37,18 @@ const fallbackTestimonials = [
 import { getApiBaseUrl } from '@/lib/baseUrl';
 
 export default function TestimonialsSection() {
-  const [reviews, setReviews] = useState<Review[]>(fallbackTestimonials);
+  const [reviews, setReviews] = useState<Review[]>([]);
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
         const apiUrl = getApiBaseUrl();
-        const res = await axios.get(`${apiUrl}/reviews`, { timeout: 3000 });
+        const res = await axios.get(`${apiUrl}/reviews`, { timeout: 10000 });
         if (Array.isArray(res.data)) {
           setReviews(res.data.filter((r: any) => r.active !== false));
         }
       } catch (err) {
-        // Ponechat fallback reference pouze při chybě API
+        console.error('Fetch reviews error:', err);
       }
     };
     fetchReviews();

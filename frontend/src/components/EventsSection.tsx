@@ -56,19 +56,22 @@ const fallbackEvents: EventItem[] = [
 ];
 
 export default function EventsSection() {
-  const [events, setEvents] = useState<EventItem[]>(fallbackEvents);
+  const [events, setEvents] = useState<EventItem[]>([]);
+  const [loaded, setLoaded] = useState(false);
   const [selected, setSelected] = useState<EventItem | null>(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const apiUrl = getApiBaseUrl();
-        const res = await axios.get(`${apiUrl}/events`, { timeout: 3000 });
+        const res = await axios.get(`${apiUrl}/events`, { timeout: 10000 });
         if (Array.isArray(res.data)) {
           setEvents(res.data.filter((e: EventItem) => e.active !== false));
         }
       } catch (err) {
-        // Ponechat fallback události pouze při chybě API
+        console.error('Fetch events error:', err);
+      } finally {
+        setLoaded(true);
       }
     };
     fetchEvents();

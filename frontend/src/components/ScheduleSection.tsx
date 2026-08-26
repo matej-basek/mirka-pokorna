@@ -85,19 +85,19 @@ const getPhotoUrl = (url?: string) => {
 };
 
 export default function ScheduleSection() {
-  const [studios, setStudios] = useState<StudioItem[]>(fallbackStudios);
+  const [studios, setStudios] = useState<StudioItem[]>([]);
   const [selected, setSelected] = useState<StudioItem | null>(null);
 
   useEffect(() => {
     const fetchStudios = async () => {
       try {
         const apiUrl = getApiBaseUrl();
-        const res = await axios.get(`${apiUrl}/studios`, { timeout: 3000 });
+        const res = await axios.get(`${apiUrl}/studios`, { timeout: 10000 });
         if (Array.isArray(res.data)) {
           setStudios(res.data);
         }
       } catch (err) {
-        // Ponechat fallback studia pouze v případě chyby připojení k API
+        console.error('Fetch studios error:', err);
       }
     };
     fetchStudios();

@@ -86,7 +86,7 @@ import { getApiBaseUrl } from '@/lib/baseUrl';
 
 export default function ServicesSection() {
   const [selectedService, setSelectedService] = useState<ServiceData | null>(null);
-  const [services, setServices] = useState<ServiceData[]>(FALLBACK_SERVICES);
+  const [services, setServices] = useState<ServiceData[]>([]);
 
   useEffect(() => {
     const apiUrl = getApiBaseUrl();
@@ -97,8 +97,8 @@ export default function ServicesSection() {
           setServices(data.filter((s) => s.active));
         }
       })
-      .catch(() => {
-        setServices(FALLBACK_SERVICES);
+      .catch((err) => {
+        console.error('Fetch services error:', err);
       });
   }, []);
 
