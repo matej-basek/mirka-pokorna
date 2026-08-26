@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const fs = require('fs');
+require('dotenv').config();
 
 const authRoutes = require('../routes/auth');
 const eventsRoutes = require('../routes/events');
@@ -15,7 +17,11 @@ const servicesRoutes = require('../routes/services');
 const app = express();
 
 app.use(cors({
-    origin: '*',
+    origin: function (origin, callback) {
+        // Dynamicky vrátíme příchozí origin, aby fungovaly credentials (cookies / headers) v prohlížeči
+        if (!origin) return callback(null, true);
+        callback(null, origin);
+    },
     credentials: true,
 }));
 
@@ -57,6 +63,12 @@ app.use(async (req, res, next) => {
     next();
 });
 
+// Statická složka pro uploads (pokud existuje)
+const uploadsDir = path.join(__dirname, '../uploads');
+if (fs.existsSync(uploadsDir)) {
+    app.use('/uploads', express.static(uploadsDir));
+}
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventsRoutes);
@@ -75,4 +87,12 @@ app.use('/seed', seedRoutes);
 app.use('/reviews', reviewsRoutes);
 app.use('/services', servicesRoutes);
 
-module.exports = app;
+// Error handler
+app.use((err, req, res, next) => {
+    console.error('Express error:', err);
+    res.status(500).json({ message: err.message || 'Internal Server Error' });
+});
+
+module.exports = (req, res) => {
+    return app(req, res);
+};

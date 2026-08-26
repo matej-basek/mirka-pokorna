@@ -24,13 +24,7 @@ const allowedOrigins = [
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin) || origin.endsWith('.onrender.com') || origin.endsWith('.vercel.app')) {
-            return callback(null, true);
-        }
-        if (process.env.NODE_ENV !== 'production') {
-            return callback(null, true);
-        }
-        callback(new Error('CORS zablokován pro tento origin: ' + origin));
+        callback(null, origin);
     },
     credentials: true,
 }));
