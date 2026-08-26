@@ -28,51 +28,7 @@ interface StudioItem {
   lessons: Lesson[];
 }
 
-const fallbackStudios: StudioItem[] = [
-  {
-    _id: 's1',
-    name: 'Prostor Pro Tebe – Praha',
-    location: 'Praha 2, Vinohrady',
-    description: 'Klidné, komorní studio s výbornou akustikou pro Intuitivní zpěv.',
-    lessons: [
-      {
-        name: 'Intuitivní zpěv & Hlasové lázně',
-        day: 'Úterý',
-        time: '18:00 – 19:30',
-        pricePerLesson: '350 Kč',
-        courseInfo: 'Cyklus 5 setkání',
-        coursePrice: '1 600 Kč',
-        additionalInfo: 'Kapacita max. 10 žen. Vhodné i pro začátečnice.',
-      },
-      {
-        name: 'Spontánní tanec & Meditace v pohybu',
-        day: 'Čtvrtek',
-        time: '17:30 – 19:00',
-        pricePerLesson: '350 Kč',
-        courseInfo: 'Otevřené lekce',
-        coursePrice: '',
-        additionalInfo: 'Pohodlné oblečení, tančíme naboso.',
-      },
-    ],
-  },
-  {
-    _id: 's2',
-    name: 'Studio Harmonik – Brno',
-    location: 'Brno - centrum',
-    description: 'Nádherný prosvětlený sál s křišťálovými mísami a kruhovým sezením.',
-    lessons: [
-      {
-        name: 'Ženský kruh & Hlasové uvolnění',
-        day: 'Středa',
-        time: '18:15 – 20:15',
-        pricePerLesson: '450 Kč',
-        courseInfo: 'Měsíční setkání',
-        coursePrice: '',
-        additionalInfo: 'Součástí je bylinkový rituál a muzikoterapie.',
-      },
-    ],
-  },
-];
+const fallbackStudios: StudioItem[] = [];
 
 import { getApiBaseUrl } from '@/lib/baseUrl';
 

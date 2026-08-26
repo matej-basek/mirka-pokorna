@@ -19,41 +19,7 @@ interface EventItem {
   active: boolean;
 }
 
-const fallbackEvents: EventItem[] = [
-  {
-    _id: '1',
-    title: 'Odemkni svůj vnitřní hlas – Intenzivní jednodenní workshop',
-    description:
-      'Celodenní zážitkový workshop zaměřený na uvolnění stahu v hrdle, objevování síly vlastního zvuku a harmonizaci těla pomocí muzikoterapeutických nástrojů.',
-    date: '15. Října 2026',
-    location: 'Prostor Pro Tebe, Praha Vinohrady',
-    price: '1 800 Kč',
-    registrationUrl: '#kontakt',
-    active: true,
-  },
-  {
-    _id: '2',
-    title: 'Podzimní Ženský Kruh: Síla Něžnosti & Spontánní Tanec',
-    description:
-      'Bezpečné večerní setkání žen. Využijeme spontánní pohyb, jemné vedení hlasu a podporu komunity pro načerpání nové energie a klidu.',
-    date: '28. Října 2026',
-    location: 'Studio Harmonik, Brno',
-    price: '750 Kč',
-    registrationUrl: '#kontakt',
-    active: true,
-  },
-  {
-    _id: '3',
-    title: 'Retreat v přírodě: Zvuk, Pohyb a Sebeláska',
-    description:
-      'Víkendový pobyt uprostřed přírody s ubytováním, vegetariánskou stravou, denní muzikoterapií, tancem a večerním ohňovým rituálem.',
-    date: '20. - 22. Listopadu 2026',
-    location: 'Přírodní centrum Jizerka',
-    price: '4 500 Kč',
-    registrationUrl: '#kontakt',
-    active: true,
-  },
-];
+const fallbackEvents: EventItem[] = [];
 
 export default function EventsSection() {
   const [events, setEvents] = useState<EventItem[]>([]);
