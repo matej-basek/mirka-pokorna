@@ -1,15 +1,12 @@
 export const getApiBaseUrl = () => {
-  if (process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
-  }
   if (
     typeof window !== 'undefined' &&
-    window.location.hostname !== 'localhost' &&
-    window.location.hostname !== '127.0.0.1'
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ) {
-    return 'https://mirka-pokorna-api.vercel.app/api';
+    return 'http://localhost:5000/api';
   }
-  return 'http://localhost:5000/api';
+  // Vždy natvrdo směřujeme na funkční Vercel backend API v produkci
+  return 'https://mirka-pokorna-api.vercel.app/api';
 };
 
 export const getBaseUrl = () => {

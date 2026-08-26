@@ -103,7 +103,7 @@ export default function ScheduleSection() {
     fetchStudios();
   }, []);
 
-  const displayedStudios = studios.length > 0 ? studios : fallbackStudios;
+  const displayedStudios = studios;
 
   return (
     <section id="kurzy" className="section">
