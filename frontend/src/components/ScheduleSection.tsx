@@ -103,13 +103,15 @@ export default function ScheduleSection() {
     fetchStudios();
   }, []);
 
+  const displayedStudios = studios.length > 0 ? studios : fallbackStudios;
+
   return (
     <section id="kurzy" className="section">
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
         
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 1, y: 0 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
@@ -133,9 +135,9 @@ export default function ScheduleSection() {
           <div className="gradient-line" style={{ margin: '16px auto 0' }} />
         </motion.div>
 
-        {studios.length === 0 ? (
+        {displayedStudios.length === 0 ? (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             style={{
@@ -175,10 +177,10 @@ export default function ScheduleSection() {
               gap: '28px',
             }}
           >
-            {studios.map((studio, i) => (
+            {displayedStudios.map((studio, i) => (
               <motion.div
                 key={studio._id}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 1, y: 0 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.12 }}

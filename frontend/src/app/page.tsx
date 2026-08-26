@@ -11,6 +11,9 @@ import ScheduleSection from '@/components/ScheduleSection';
 import ContactSection from '@/components/ContactSection';
 import CookieBanner from '@/components/CookieBanner';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default function Home() {
   return (
     <main className="relative min-h-screen overflow-x-hidden">

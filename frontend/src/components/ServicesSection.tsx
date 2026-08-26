@@ -110,7 +110,7 @@ export default function ServicesSection() {
     return `${backendOrigin}${url.startsWith('/') ? '' : '/'}${url}`;
   };
 
-  const displayedServices = services;
+  const displayedServices = services.length > 0 ? services : FALLBACK_SERVICES;
 
   return (
     <section id="sluzby" className="section">
@@ -118,10 +118,7 @@ export default function ServicesSection() {
         
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 1, y: 0 }}
           style={{ textAlign: 'center', marginBottom: '56px' }}
         >
           <div
@@ -155,7 +152,7 @@ export default function ServicesSection() {
             return (
               <motion.div
                 key={service._id}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 1, y: 0 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.12 }}

@@ -154,7 +154,7 @@ export default function EventsSection() {
             {events.map((event, i) => (
               <motion.div
                 key={event._id}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 1, y: 0 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}

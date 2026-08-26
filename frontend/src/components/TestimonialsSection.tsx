@@ -54,13 +54,15 @@ export default function TestimonialsSection() {
     fetchReviews();
   }, []);
 
+  const displayedReviews = reviews.length > 0 ? reviews : fallbackTestimonials;
+
   return (
     <section id="reference" className="section">
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
         
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 1, y: 0 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
@@ -92,10 +94,10 @@ export default function TestimonialsSection() {
             gap: '28px',
           }}
         >
-          {reviews.map((item, i) => (
+          {displayedReviews.map((item, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 1, y: 0 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.12 }}
