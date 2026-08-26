@@ -38,24 +38,8 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// Statická složka pro nahrané soubory
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/events', eventsRoutes);
-app.use('/api/studios', studiosRoutes);
-app.use('/api/contact', contactRoutes);
-app.use('/api/seed', seedRoutes);
-app.use('/api/reviews', reviewsRoutes);
-app.use('/api/services', servicesRoutes);
-
-// Health Check
-app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
-
-const PORT = process.env.PORT || 5000;
+// Database connection helper
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/mirkapokorna';
-
 let isConnecting = null;
 
 const connectDB = async () => {
@@ -79,7 +63,7 @@ const connectDB = async () => {
     }
 };
 
-// Middleware pro automatické připojení DB u serverless requestů
+// Auto-connect DB middleware for serverless requests (před všemi routami)
 app.use(async (req, res, next) => {
     try {
         await connectDB();
@@ -89,14 +73,31 @@ app.use(async (req, res, next) => {
     next();
 });
 
-// Pokud nebydlíme na Vercelu jako serverless funkce, spustíme HTTP server pro lokální vývoj
+// Root & Health Check
+app.get('/', (req, res) => res.json({ status: 'ok', message: 'Mirka Pokorna API running on Vercel' }));
+app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
+
+// Statická složka pro nahrané soubory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/events', eventsRoutes);
+app.use('/api/studios', studiosRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api/seed', seedRoutes);
+app.use('/api/reviews', reviewsRoutes);
+app.use('/api/services', servicesRoutes);
+
+const PORT = process.env.PORT || 5000;
+
 if (!process.env.VERCEL) {
     app.listen(PORT, () => {
         console.log(`🚀 Backend server mirkapokorna.cz běží na portu ${PORT}`);
         connectDB();
     });
 } else {
-    connectDB();
+    connectDB().catch(err => console.error('Top level connectDB error:', err));
 }
 
 module.exports = app;
