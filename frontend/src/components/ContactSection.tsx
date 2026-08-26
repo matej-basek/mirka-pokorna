@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, Phone, Mail, MapPin, Send, CheckCircle2, XCircle, FileText, Instagram, Facebook } from 'lucide-react';
 import axios from 'axios';
+import { getApiBaseUrl } from '@/lib/baseUrl';
 
 export default function ContactSection() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
@@ -12,10 +13,11 @@ export default function ContactSection() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setStatus('loading');
     setErrorMsg('');
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = getApiBaseUrl();
       const res = await axios.post(`${apiUrl}/contact`, form);
       if (res.data && res.data.success !== false) {
         setStatus('success');

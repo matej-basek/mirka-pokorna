@@ -4,17 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, MapPin, ExternalLink } from 'lucide-react';
 import axios from 'axios';
-
-const getBaseUrl = () => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-  return apiUrl.replace('/api', '');
-};
-
-const getImageSrc = (url?: string) => {
-  if (!url) return '';
-  if (url.startsWith('http')) return url;
-  return `${getBaseUrl()}${url}`;
-};
+import { getApiBaseUrl, getImageSrc } from '@/lib/baseUrl';
 
 interface EventItem {
   _id: string;
@@ -72,7 +62,7 @@ export default function EventsSection() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+        const apiUrl = getApiBaseUrl();
         const res = await axios.get(`${apiUrl}/events`, { timeout: 3000 });
         if (Array.isArray(res.data)) {
           setEvents(res.data.filter((e: EventItem) => e.active !== false));

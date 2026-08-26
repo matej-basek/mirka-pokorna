@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
       router.push('/admin/events');
     } catch (err: any) {
       if (err.code === 'ECONNABORTED' || err.code === 'ERR_NETWORK' || !err.response) {
-        setError('Nelze se připojit k backend serveru (http://localhost:5000). Zkontrolujte připojení.');
+        setError('Nelze se připojit k backend serveru. Zkontrolujte síťové připojení.');
       } else {
         setError(err.response?.data?.message || 'Nesprávné uživatelské jméno nebo heslo.');
       }

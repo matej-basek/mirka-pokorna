@@ -74,10 +74,12 @@ const fallbackStudios: StudioItem[] = [
   },
 ];
 
+import { getApiBaseUrl } from '@/lib/baseUrl';
+
 const getPhotoUrl = (url?: string) => {
   if (!url) return '';
   if (url.startsWith('http://') || url.startsWith('https://')) return url;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const apiUrl = getApiBaseUrl();
   const backendOrigin = apiUrl.replace(/\/api\/?$/, '');
   return `${backendOrigin}${url.startsWith('/') ? '' : '/'}${url}`;
 };
@@ -89,7 +91,7 @@ export default function ScheduleSection() {
   useEffect(() => {
     const fetchStudios = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+        const apiUrl = getApiBaseUrl();
         const res = await axios.get(`${apiUrl}/studios`, { timeout: 3000 });
         if (Array.isArray(res.data)) {
           setStudios(res.data);

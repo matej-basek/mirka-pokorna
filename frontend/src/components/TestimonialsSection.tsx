@@ -34,13 +34,15 @@ const fallbackTestimonials = [
   },
 ];
 
+import { getApiBaseUrl } from '@/lib/baseUrl';
+
 export default function TestimonialsSection() {
   const [reviews, setReviews] = useState<Review[]>(fallbackTestimonials);
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+        const apiUrl = getApiBaseUrl();
         const res = await axios.get(`${apiUrl}/reviews`, { timeout: 3000 });
         if (Array.isArray(res.data)) {
           setReviews(res.data.filter((r: any) => r.active !== false));

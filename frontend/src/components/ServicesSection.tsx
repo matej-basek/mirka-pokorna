@@ -82,12 +82,14 @@ const FALLBACK_SERVICES: ServiceData[] = [
   },
 ];
 
+import { getApiBaseUrl } from '@/lib/baseUrl';
+
 export default function ServicesSection() {
   const [selectedService, setSelectedService] = useState<ServiceData | null>(null);
   const [services, setServices] = useState<ServiceData[]>(FALLBACK_SERVICES);
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    const apiUrl = getApiBaseUrl();
     fetch(`${apiUrl}/services`)
       .then((res) => res.json())
       .then((data: ServiceData[]) => {
@@ -103,7 +105,7 @@ export default function ServicesSection() {
   const getImageUrl = (url?: string) => {
     if (!url) return '';
     if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/service-')) return url;
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    const apiUrl = getApiBaseUrl();
     const backendOrigin = apiUrl.replace(/\/api\/?$/, '');
     return `${backendOrigin}${url.startsWith('/') ? '' : '/'}${url}`;
   };

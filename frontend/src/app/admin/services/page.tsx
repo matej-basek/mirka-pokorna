@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { getApiBaseUrl } from '@/lib/baseUrl';
 import {
   Plus,
   Trash2,
@@ -76,7 +77,7 @@ export default function AdminServicesPage() {
   const getImageUrl = (url?: string) => {
     if (!url) return '';
     if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('blob:')) return url;
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    const apiUrl = getApiBaseUrl();
     const backendOrigin = apiUrl.replace(/\/api\/?$/, '');
     return `${backendOrigin}${url.startsWith('/') ? '' : '/'}${url}`;
   };
