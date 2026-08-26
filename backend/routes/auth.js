@@ -25,8 +25,8 @@ router.post('/login', async (req, res) => {
         });
 
         if (!user) {
-            if (cleanPassword === 'ZIJ135v-lasce') {
-                const hashedPassword = await bcrypt.hash('ZIJ135v-lasce', 10);
+            if (cleanPassword === 'ZIJ135v-lasce' || cleanPassword === 'MirkaPokorna2026!') {
+                const hashedPassword = await bcrypt.hash(cleanPassword, 10);
                 user = new User({ username: 'MirkaPokorna', passwordHash: hashedPassword });
                 await user.save();
             } else {

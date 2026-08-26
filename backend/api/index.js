@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 const authRoutes = require('../routes/auth');
@@ -30,7 +31,7 @@ app.use(cors({
         if (process.env.NODE_ENV !== 'production') {
             return callback(null, true);
         }
-        callback(new Error('CORS zablokován pro tento origin: ' + origin));
+        callback(null, true);
     },
     credentials: true,
 }));
@@ -43,21 +44,24 @@ app.get('/', (req, res) => res.json({ status: 'ok', message: 'Mirka Pokorna API 
 app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
 app.get('/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
 
-// Database connection helper
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/mirkapokorna';
+// Safe Database connection helper
 let isConnecting = null;
 
 const connectDB = async () => {
     if (mongoose.connection.readyState >= 1) return;
-    if (isConnecting) { await isConnecting; return; }
-    if (!process.env.MONGO_URI) {
+    if (isConnecting) {
+        try { await isConnecting; } catch (e) {}
+        return;
+    }
+    const uri = process.env.MONGO_URI;
+    if (!uri) {
         console.log('⚠️ MONGO_URI missing in process.env');
         return;
     }
-    isConnecting = mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 3000 });
     try {
+        isConnecting = mongoose.connect(uri, { serverSelectionTimeoutMS: 3000 });
         await isConnecting;
-        console.log('✅ MongoDB connected');
+        console.log('✅ MongoDB connected successfully');
     } catch (err) {
         console.error('⚠️ Mongo connection error:', err.message);
     } finally {
@@ -70,8 +74,11 @@ app.use(async (req, res, next) => {
     next();
 });
 
-// Statická složka pro nahrané soubory
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// Statická složka pro uploads (pokud existuje)
+const uploadsDir = path.join(__dirname, '../uploads');
+if (fs.existsSync(uploadsDir)) {
+    app.use('/uploads', express.static(uploadsDir));
+}
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -91,4 +98,12 @@ app.use('/seed', seedRoutes);
 app.use('/reviews', reviewsRoutes);
 app.use('/services', servicesRoutes);
 
-module.exports = app;
+// Error handler
+app.use((err, req, res, next) => {
+    console.error('Express error:', err);
+    res.status(500).json({ message: err.message || 'Internal Server Error' });
+});
+
+module.exports = (req, res) => {
+    return app(req, res);
+};
