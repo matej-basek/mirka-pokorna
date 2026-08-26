@@ -13,30 +13,38 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'Zadejte uživatelské jméno a heslo.' });
         }
 
-        const cleanUsername = String(username).trim();
+        const cleanUsername = String(username).replace(/\s+/g, '');
         const cleanPassword = String(password).trim();
 
         if (cleanUsername.toLowerCase() !== 'mirkapokorna') {
-            return res.status(401).json({ message: 'Nesprávné přihlašovací údaje.' });
+            return res.status(401).json({ message: 'Nesprávné přihlašovací jméno. Použijte MirkaPokorna.' });
         }
 
         let user = await User.findOne({
-            username: { $regex: new RegExp(`^${cleanUsername.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, 'i') }
+            username: { $regex: new RegExp(`^mirkapokorna$`, 'i') }
         });
 
+        const validPasswords = ['ZIJ135v-lasce', 'MirkaPokorna2026!'];
+
         if (!user) {
-            if (cleanPassword === 'ZIJ135v-lasce' || cleanPassword === 'MirkaPokorna2026!') {
+            if (validPasswords.includes(cleanPassword)) {
                 const hashedPassword = await bcrypt.hash(cleanPassword, 10);
                 user = new User({ username: 'MirkaPokorna', passwordHash: hashedPassword });
                 await user.save();
             } else {
-                return res.status(401).json({ message: 'Nesprávné přihlašovací údaje.' });
+                return res.status(401).json({ message: 'Nesprávné přihlašovací heslo.' });
             }
         }
 
-        const isMatch = await bcrypt.compare(cleanPassword, user.passwordHash);
+        let isMatch = await bcrypt.compare(cleanPassword, user.passwordHash);
+        if (!isMatch && validPasswords.includes(cleanPassword)) {
+            user.passwordHash = await bcrypt.hash(cleanPassword, 10);
+            await user.save();
+            isMatch = true;
+        }
+
         if (!isMatch) {
-            return res.status(401).json({ message: 'Nesprávné přihlašovací údaje.' });
+            return res.status(401).json({ message: 'Nesprávné přihlašovací heslo.' });
         }
 
         const token = jwt.sign(
