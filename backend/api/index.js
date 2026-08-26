@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const fs = require('fs');
-require('dotenv').config();
 
 const authRoutes = require('../routes/auth');
 const eventsRoutes = require('../routes/events');
@@ -16,23 +14,8 @@ const servicesRoutes = require('../routes/services');
 
 const app = express();
 
-const allowedOrigins = [
-    'http://localhost:3000',
-    'https://mirkapokorna.cz',
-    'https://www.mirkapokorna.cz',
-];
-
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin) || origin.endsWith('.onrender.com') || origin.endsWith('.vercel.app')) {
-            return callback(null, true);
-        }
-        if (process.env.NODE_ENV !== 'production') {
-            return callback(null, true);
-        }
-        callback(null, true);
-    },
+    origin: '*',
     credentials: true,
 }));
 
@@ -74,12 +57,6 @@ app.use(async (req, res, next) => {
     next();
 });
 
-// Statická složka pro uploads (pokud existuje)
-const uploadsDir = path.join(__dirname, '../uploads');
-if (fs.existsSync(uploadsDir)) {
-    app.use('/uploads', express.static(uploadsDir));
-}
-
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventsRoutes);
@@ -98,12 +75,4 @@ app.use('/seed', seedRoutes);
 app.use('/reviews', reviewsRoutes);
 app.use('/services', servicesRoutes);
 
-// Error handler
-app.use((err, req, res, next) => {
-    console.error('Express error:', err);
-    res.status(500).json({ message: err.message || 'Internal Server Error' });
-});
-
-module.exports = (req, res) => {
-    return app(req, res);
-};
+module.exports = app;
