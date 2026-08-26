@@ -56,34 +56,47 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date().t
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/mirkapokorna';
 
-// Spustíme Express HTTP server ihned, aby API reagovalo okamžitě a nečekalo na DB
-app.listen(PORT, () => {
-    console.log(`🚀 Backend server mirkapokorna.cz běží na portu ${PORT}`);
+let isConnecting = null;
 
-    // Keep-alive ping pro udržení aktivity na Render.com free tieru
-    const backendUrl = process.env.RENDER_EXTERNAL_URL || 'https://mirka-pokorna.onrender.com';
-    const frontendUrl = process.env.FRONTEND_RENDER_URL || 'https://mirka-pokorna-web.onrender.com';
-    console.log(`📡 Keep-alive ping aktivní pro backend: ${backendUrl}/api/health`);
-    console.log(`📡 Keep-alive ping aktivní pro frontend: ${frontendUrl}`);
-    setInterval(() => {
-        // Ping backendu
-        fetch(`${backendUrl}/api/health`)
-            .then(res => console.log(`[${new Date().toISOString()}] Backend ping ok:`, res.status))
-            .catch(err => console.log(`[${new Date().toISOString()}] Backend ping selhal:`, err.message));
-        // Ping frontendu
-        fetch(frontendUrl)
-            .then(res => console.log(`[${new Date().toISOString()}] Frontend ping ok:`, res.status))
-            .catch(err => console.log(`[${new Date().toISOString()}] Frontend ping selhal:`, err.message));
-    }, 14 * 60 * 1000); // každých 14 minut (Render uspí po 15 min)
+const connectDB = async () => {
+    if (mongoose.connection.readyState >= 1) {
+        return;
+    }
+    if (isConnecting) {
+        await isConnecting;
+        return;
+    }
+    isConnecting = mongoose.connect(MONGO_URI, {
+        serverSelectionTimeoutMS: 5000,
+    });
+    try {
+        await isConnecting;
+        console.log('✅ MongoDB připojen ke stávající databázi');
+    } catch (err) {
+        console.error('⚠️ Chyba při připojování k MongoDB Atlas:', err.message);
+    } finally {
+        isConnecting = null;
+    }
+};
+
+// Middleware pro automatické připojení DB u serverless requestů
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+    } catch (err) {
+        console.error('DB Connection middleware error:', err);
+    }
+    next();
 });
 
-mongoose
-    .connect(MONGO_URI, {
-        serverSelectionTimeoutMS: 5000, // Maximálně 5s čekání na MongoDB
-    })
-    .then(() => {
-        console.log('✅ MongoDB připojen ke stávající databázi');
-    })
-    .catch((err) => {
-        console.error('⚠️ Chyba při připojování k MongoDB Atlas:', err.message);
+// Pokud nebydlíme na Vercelu jako serverless funkce, spustíme HTTP server pro lokální vývoj
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`🚀 Backend server mirkapokorna.cz běží na portu ${PORT}`);
+        connectDB();
     });
+} else {
+    connectDB();
+}
+
+module.exports = app;
