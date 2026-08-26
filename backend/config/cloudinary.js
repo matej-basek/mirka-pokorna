@@ -28,36 +28,23 @@ if (isCloudinaryConfigured) {
         },
     });
 } else {
-    // Fallback na lokální disk, pokud Cloudinary proměnné nejsou v env
-    let uploadDir = path.join(__dirname, '../uploads');
-    if (process.env.VERCEL) {
-        uploadDir = '/tmp/uploads';
-    }
-    try {
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-    } catch (e) {
-        console.warn('⚠️ Nepodařilo se vytvořit složku uploads:', e.message);
-    }
-
-    storage = multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, uploadDir);
-        },
-        filename: (req, file, cb) => {
-            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-            cb(null, uniqueSuffix + path.extname(file.originalname));
-        }
-    });
+    // Na Vercelu (serverless) ukládáme obrázek do paměti a převádíme na Base64 Data URL uložené přímo v MongoDB
+    storage = multer.memoryStorage();
 }
 
-const upload = multer({ storage });
+const upload = multer({
+    storage,
+    limits: { fileSize: 10 * 1024 * 1024 } // 10 MB limit
+});
 
 const getUploadedFileUrl = (file) => {
     if (!file) return '';
     if (file.path && file.path.startsWith('http')) {
         return file.path;
+    }
+    if (file.buffer) {
+        const mime = file.mimetype || 'image/jpeg';
+        return `data:${mime};base64,${file.buffer.toString('base64')}`;
     }
     if (file.filename) {
         return `/uploads/${file.filename}`;
